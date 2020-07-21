@@ -2,42 +2,44 @@ Attribute VB_Name = "ConvertReverse"
 Option Explicit
 
 '------------------------------------------------------------------------------
-' ## ƒwƒbƒ_s”
+' ## ãƒ˜ãƒƒãƒ€è¡Œæ•°
 '------------------------------------------------------------------------------
 Private Const HEADER_LINENO As Long = 1
 
 '------------------------------------------------------------------------------
-' ## ƒf[ƒ^ƒx[ƒXŒ`®‚©‚çŒ³ƒtƒ@ƒCƒ‹‚Ö‚Ì‹t•ÏŠ·ƒvƒƒOƒ‰ƒ€
+' ## ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹å½¢å¼ã‹ã‚‰å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®é€†å¤‰æ›ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 '
-' ConverDatabase‚É‚Äì¬‚µ‚½ƒf[ƒ^‚ğŒ³ƒtƒ@ƒCƒ‹‚Ö•Ô‚·
+' ConverDatabaseã«ã¦ä½œæˆã—ãŸãƒ‡ãƒ¼ã‚¿ã‚’å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸è¿”ã™
 '------------------------------------------------------------------------------
 Public Sub ConvertReverse(ByVal source_filepath As String)
     
-    ' ‹t•ÏŠ·‚É‚Â‚¢‚Ä‚ÌŠm”F
+    ' é€†å¤‰æ›ã«ã¤ã„ã¦ã®ç¢ºèª
     Dim confirmationMessage As VbMsgBoxResult
     confirmationMessage = _
-        MsgBox("Œ³ƒtƒ@ƒCƒ‹‚Ö‚Ì‹t•ÏŠ·‚ğs‚¢‚Ü‚·B–â‘è‚ ‚è‚Ü‚¹‚ñ‚©H", _
+        MsgBox("å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®é€†å¤‰æ›ã‚’è¡Œã„ã¾ã™ã€‚å•é¡Œã‚ã‚Šã¾ã›ã‚“ã‹ï¼Ÿ", _
             vbYesNo + vbQuestion)
     If confirmationMessage = vbNo Then Exit Sub
     
-    ' Œ³ƒtƒ@ƒCƒ‹‚©‚çƒf[ƒ^ƒx[ƒXŒ`®ƒtƒ@ƒCƒ‹‚ÌƒpƒX¶¬
-    Dim extensionPoint As Long
     Dim dataFilePath As String
+    Dim dataFile As Workbook
+    Dim sourceFile As Workbook
+    Dim dataArray As Variant
+    
+    ' å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹å½¢å¼ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ç”Ÿæˆ
+    Dim extensionPoint As Long
     extensionPoint = InStrRev(source_filepath, ".")
-    dataFilePath = Left(source_filepath, extensionPoint - 1) & "_•ÒW—p.xlsx"
+    dataFilePath = Left(source_filepath, extensionPoint - 1) & "_ç·¨é›†ç”¨.xlsx"
     
     If Dir(dataFilePath) = "" Then
-        MsgBox "•ÒW—pƒtƒ@ƒCƒ‹‚ª‘¶İ‚µ‚Ü‚¹‚ñB", vbCritical
+        MsgBox "ç·¨é›†ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ã¾ã›ã‚“ã€‚", vbCritical
         Exit Sub
     End If
     
-    ' ƒf[ƒ^ƒx[ƒXŒ`®ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-    Dim dataFile As Workbook
+    ' ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹å½¢å¼ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
     Call CommonSub.OpenBookReadOnly(dataFilePath, dataFile)
     If dataFile Is Nothing Then Exit Sub
     
-    ' Œ³ƒtƒ@ƒCƒ‹‚ğŠJ‚­
-    Dim sourceFile As Workbook
+    ' å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
     Call openSourceFile(source_filepath, sourceFile)
     If sourceFile Is Nothing Then
         dataFile.Close SaveChanges:=False
@@ -46,27 +48,26 @@ Public Sub ConvertReverse(ByVal source_filepath As String)
     
     CommonProperty.AccelerationMode = True
     
-    ' ƒf[ƒ^ƒx[ƒXŒ`®‚Ìƒf[ƒ^‚ğ”z—ñ‚ÉŠi”[
-    Dim dataArray As Variant
+    ' ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹å½¢å¼ã®ãƒ‡ãƒ¼ã‚¿ã‚’é…åˆ—ã«æ ¼ç´
     dataArray = dataFile.Sheets(1).UsedRange
     dataFile.Close SaveChanges:=False
     
-    ' Œ³ƒtƒ@ƒCƒ‹‚Öƒf[ƒ^‚ğ–ß‚·
+    ' å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ãƒ‡ãƒ¼ã‚¿ã‚’æˆ»ã™
     Call returnData(dataArray, sourceFile)
     
     CommonProperty.AccelerationMode = False
     
-    ' ã‘‚«•Û‘¶‚ÌŠm”F
+    ' ä¸Šæ›¸ãä¿å­˜ã®ç¢ºèª
     Dim saveMessage As VbMsgBoxResult
     saveMessage = _
-        MsgBox("Œ³ƒtƒ@ƒCƒ‹‚Ö‚Ì‹t•ÏŠ·‚ªŠ®—¹‚µ‚Ü‚µ‚½B•Û‘¶‚µ‚Ü‚·‚©H", _
+        MsgBox("å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®é€†å¤‰æ›ãŒå®Œäº†ã—ã¾ã—ãŸã€‚ä¿å­˜ã—ã¾ã™ã‹ï¼Ÿ", _
             vbYesNo + vbInformation)
     If saveMessage = vbYes Then sourceFile.Save
     
 End Sub
 
 '------------------------------------------------------------------------------
-' ## Œ³ƒtƒ@ƒCƒ‹‚ğŠJ‚­
+' ## å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 '------------------------------------------------------------------------------
 Private Sub openSourceFile(ByVal source_filepath As String, _
                            ByRef source_file As Workbook)
@@ -74,9 +75,9 @@ Private Sub openSourceFile(ByVal source_filepath As String, _
     Dim sourceFileName As String
     sourceFileName = Dir(source_filepath)
     
-    ' “¯–¼ƒuƒbƒN‚Ì‹N“®—L–³Šm”F
+    ' åŒåãƒ–ãƒƒã‚¯ã®èµ·å‹•æœ‰ç„¡ç¢ºèª
     If CommonFunction.IsDuplicateBook(sourceFileName) Then
-        MsgBox "“¯–¼ƒuƒbƒN‚ªŠJ‚©‚ê‚Ä‚¢‚é‚½‚ßˆ—‚ğ’†’f‚µ‚Ü‚µ‚½B", vbCritical
+        MsgBox "åŒåãƒ–ãƒƒã‚¯ãŒé–‹ã‹ã‚Œã¦ã„ã‚‹ãŸã‚å‡¦ç†ã‚’ä¸­æ–­ã—ã¾ã—ãŸã€‚", vbCritical
         Exit Sub
     End If
     
@@ -86,7 +87,7 @@ Private Sub openSourceFile(ByVal source_filepath As String, _
 End Sub
 
 '------------------------------------------------------------------------------
-' ## Œ³ƒtƒ@ƒCƒ‹‚Öƒf[ƒ^‚ğ–ß‚·
+' ## å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸ãƒ‡ãƒ¼ã‚¿ã‚’æˆ»ã™
 '------------------------------------------------------------------------------
 Private Sub returnData(ByRef data_array As Variant, _
                        ByRef source_file As Workbook)
@@ -101,10 +102,10 @@ Private Sub returnData(ByRef data_array As Variant, _
         sheetName = data_array(data_row, 1)
         sheet_row = data_array(data_row, 2)
         
-        ' ƒV[ƒg–¼‚Ü‚½‚Ís”Ô†‚ª‹ó”’‚Ìê‡‚ÍƒXƒLƒbƒv
+        ' ã‚·ãƒ¼ãƒˆåã¾ãŸã¯è¡Œç•ªå·ãŒç©ºç™½ã®å ´åˆã¯ã‚¹ã‚­ãƒƒãƒ—
         If sheetName <> "" Or sheet_row < 1 Then GoTo Continue_data_row
         
-        ' sƒf[ƒ^‚ğŒ³ƒtƒ@ƒCƒ‹‚Ö–ß‚·
+        ' è¡Œãƒ‡ãƒ¼ã‚¿ã‚’å…ƒãƒ•ã‚¡ã‚¤ãƒ«ã¸æˆ»ã™
         Set currentSheet = source_file.Worksheets(sheetName)
         For data_col = 1 + ADDITION_COLUMN To UBound(data_array, 2)
             sheet_col = data_col - ADDITION_COLUMN
